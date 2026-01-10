@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Alice"
+    },
+    {
+      "id": "2",
+      "name": "Bob"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "2c4d",
+      "type": "credit",
+      "amount": 100,
+      "fee": 0,
+      "status": "success",
+      "timestamp": "2026-01-10T08:12:16.260Z"
+    },
+    {
+      "id": "3194",
+      "type": "debit",
+      "amount": 1000,
+      "fee": 20,
+      "recipient": "Bob",
+      "status": "success",
+      "timestamp": "2026-01-10T08:14:41.330Z"
+    }
+  ],
+  "config": {
+    "feePercentage": 2,
+    "maxLimit": 10000
+  }
+}
