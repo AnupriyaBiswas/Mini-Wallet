@@ -2,30 +2,64 @@
   "users": [
     {
       "id": "1",
-      "name": "Alice"
+      "name": "Arghya"
     },
     {
       "id": "2",
-      "name": "Bob"
+      "name": "Suparni"
+    },
+    {
+      "id": "3",
+      "name": "Dishari"
+    },
+    {
+      "id": "4",
+      "name": "Poulomi"
+    },
+    {
+      "id": "5",
+      "name": "Upasana"
+    },
+    {
+      "id": "6",
+      "name": "Srijita"
+    },
+    {
+      "id": "7",
+      "name": "Sattwik"
+    },
+    {
+      "id": "8",
+      "name": "Srinjoy"
     }
   ],
   "transactions": [
     {
-      "id": "2c4d",
+      "id": "08b4",
       "type": "credit",
-      "amount": 100,
-      "fee": 0,
+      "amount": 1000,
       "status": "success",
-      "timestamp": "2026-01-10T08:12:16.260Z"
+      "sender": "Self",
+      "from": "Self",
+      "timestamp": "2026-01-12T16:07:06.760Z"
     },
     {
-      "id": "3194",
+      "id": "76b7",
       "type": "debit",
-      "amount": 1000,
-      "fee": 20,
-      "recipient": "Bob",
+      "amount": 50,
       "status": "success",
-      "timestamp": "2026-01-10T08:14:41.330Z"
+      "recipient": "Dishari",
+      "to": "Dishari",
+      "timestamp": "2026-01-12T16:07:17.470Z"
+    },
+    {
+      "id": "d42d",
+      "type": "credit",
+      "amount": 500,
+      "status": "success",
+      "sender": "Self",
+      "from": "Self",
+      "timestamp": "2026-01-12T16:07:48.393Z"
     }
   ],
   "config": {

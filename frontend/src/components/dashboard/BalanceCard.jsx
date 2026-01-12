@@ -1,8 +1,23 @@
 function BalanceCard({ balance }) {
+  const isNegative = balance < 0
+
   return (
-    <div style={{ border: "1px solid #ccc", padding: 16 }}>
-      <h3>Wallet Balance</h3>
-      <h1>₹ {balance}</h1>
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+      <h3 className="text-sm text-slate-400">
+        Wallet Balance
+      </h3>
+
+      <div
+        className={`mt-2 text-3xl font-bold ${
+          isNegative ? "text-red-500" : "text-emerald-400"
+        }`}
+      >
+        ₹ {balance}
+      </div>
+
+      <p className="mt-2 text-sm text-slate-400">
+        Updated based on your recent transactions
+      </p>
     </div>
   )
 }

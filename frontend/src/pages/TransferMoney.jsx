@@ -1,94 +1,64 @@
-import { useEffect, useState } from "react"
-import { getUsers } from "../api/users.api"
-import { addTransaction } from "../api/transactions.api"
-import { TRANSACTION_STATUS } from "../constants/transactionStatus"
-import { useConfig } from "../hooks/useConfig"
-import toast from "react-hot-toast"
-
+import { useState } from "react"
+import { useCreateTransaction } from "../hooks/useCreateTransaction"
+import { useNavigate } from "react-router-dom"
 
 function TransferMoney() {
-  const [users, setUsers] = useState([])
-  const [recipient, setRecipient] = useState("")
   const [amount, setAmount] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [recipient, setRecipient] = useState("")
+  const navigate = useNavigate()
 
-  const { config, loading: configLoading } = useConfig()
+  const { createTransaction, loading } = useCreateTransaction(() =>
+    navigate("/")
+  )
 
-  useEffect(() => {
-    getUsers().then(res => setUsers(res.data))
-  }, [])
+  const handleSubmit = () => {
+    if (!recipient || !amount || amount <= 0) return
 
-  if (configLoading) return <p>Loading config...</p>
-
-  const fee = (amount * config.feePercentage) / 100
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    if (!recipient || !amount) {
-      alert("Fill all fields")
-      return
-    }
-
-    if (amount > config.maxLimit) {
-      toast.error("Amount exceeds transaction limit")
-      return
-    }
-
-    const confirm = window.confirm(
-      `Transfer ₹${amount} with fee ₹${fee}?`
-    )
-
-    if (!confirm) return
-
-    setLoading(true)
-
-    await addTransaction({
+    createTransaction({
       type: "debit",
       amount: Number(amount),
-      fee: Number(fee),
+      status: "success",
+
+      // IMPORTANT: send both keys for backend compatibility
       recipient,
-      status: TRANSACTION_STATUS.SUCCESS,
-      timestamp: new Date().toISOString()
+      to: recipient,
     })
-
-    setRecipient("")
-    setAmount("")
-    setLoading(false)
-
-    toast.success("Transfer successful")
   }
 
   return (
-    <div>
-      <h2>Transfer Money</h2>
+    <div className="max-w-md mx-auto space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold">Transfer Money</h2>
+        <p className="text-slate-400 text-sm">
+          Send money to another user
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <select
+      <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 space-y-4">
+        <input
+          type="text"
           value={recipient}
-          onChange={e => setRecipient(e.target.value)}
-        >
-          <option value="">Select recipient</option>
-          {users.map(user => (
-            <option key={user.id} value={user.name}>
-              {user.name}
-            </option>
-          ))}
-        </select>
+          onChange={(e) => setRecipient(e.target.value)}
+          placeholder="Recipient name"
+          className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-2 text-slate-100"
+        />
 
         <input
           type="number"
-          placeholder="Amount"
           value={amount}
-          onChange={e => setAmount(e.target.value)}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Amount"
+          className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-2 text-slate-100"
         />
 
-        <p>Fee: ₹{fee || 0}</p>
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Transferring..." : "Transfer"}
+        <button
+          disabled={loading}
+          onClick={handleSubmit}
+          className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 py-2 rounded-lg font-medium"
+        >
+          {loading ? "Processing..." : "Transfer Money"}
         </button>
-      </form>
+      </div>
     </div>
   )
 }

@@ -1,51 +1,56 @@
 import { useState } from "react"
-import { addTransaction } from "../api/transactions.api"
-import { TRANSACTION_STATUS } from "../constants/transactionStatus"
-import toast from "react-hot-toast"
+import { useCreateTransaction } from "../hooks/useCreateTransaction"
+import { useNavigate } from "react-router-dom"
 
 function AddMoney() {
   const [amount, setAmount] = useState("")
-  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const { createTransaction, loading } = useCreateTransaction(() =>
+    navigate("/")
+  )
 
+  const handleSubmit = () => {
     if (!amount || amount <= 0) {
-      toast.error("Enter valid amount")
       return
     }
 
-    setLoading(true)
-
-    await addTransaction({
+    createTransaction({
       type: "credit",
       amount: Number(amount),
-      fee: 0,
-      status: TRANSACTION_STATUS.SUCCESS,
-      timestamp: new Date().toISOString()
+      status: "success",
+      sender: "Self",
+      from: "Self",
     })
 
-    setAmount("")
-    setLoading(false)
-    toast.success("Money added successfully")
   }
 
   return (
-    <div>
-      <h2>Add Money</h2>
+    <div className="max-w-md mx-auto space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold">Add Money</h2>
+        <p className="text-slate-400 text-sm">
+          Add funds to your wallet
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
+      <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 space-y-4">
         <input
           type="number"
-          placeholder="Amount"
           value={amount}
-          onChange={e => setAmount(e.target.value)}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount"
+          className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-2"
         />
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Adding..." : "Add Money"}
+        <button
+          disabled={loading}
+          onClick={handleSubmit}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 py-2 rounded-lg font-medium"
+        >
+          {loading ? "Processing..." : "Add Money"}
         </button>
-      </form>
+      </div>
     </div>
   )
 }
