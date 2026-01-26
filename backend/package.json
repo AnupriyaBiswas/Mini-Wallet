@@ -1,0 +1,20 @@
+{
+  "name": "mini-wallet-backend",
+  "version": "1.0.0",
+  "description": "Mock backend for Mini Wallet application using json-server",
+  "main": "db.json",
+  "scripts": {
+    "start": "json-server --watch db.json --port 4000",
+    "dev": "json-server --watch db.json --port 4000"
+  },
+  "keywords": [
+    "json-server",
+    "wallet",
+    "mock-backend"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^1.0.0-beta.3"
+  }
+}

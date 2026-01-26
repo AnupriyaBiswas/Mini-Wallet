@@ -1,14 +1,34 @@
+import { useMemo } from "react"
 import { useTransactions } from "../hooks/useTransactions"
 import { useBalance } from "../hooks/useBalance"
 import BalanceCard from "../components/dashboard/BalanceCard"
+import CreditDebitDonut from "../components/charts/CreditDebitDonut"
+import CreditDebitStats from "../components/dashboard/CreditDebitStats"
 import RecentTransactions from "../components/dashboard/RecentTransactions"
 
 function Dashboard() {
   const { transactions, loading, error } = useTransactions()
   const balance = useBalance(transactions)
 
+  const { credit, debit } = useMemo(() => {
+    return transactions.reduce(
+      (acc, txn) => {
+        if (txn.status !== "success") return acc
+
+        if (txn.type === "credit") {
+          acc.credit += txn.amount
+        } else if (txn.type === "debit") {
+          acc.debit += txn.amount + (txn.fee || 0)
+        }
+
+        return acc
+      },
+      { credit: 0, debit: 0 }
+    )
+  }, [transactions])
+
   if (loading) {
-    return <p className="text-gray-500">Loading dashboard...</p>
+    return <p className="text-slate-400">Loading dashboard...</p>
   }
 
   if (error) {
@@ -17,20 +37,35 @@ function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Page Header */}
       <div>
-        <h2 className="text-2xl font-bold">Dashboard</h2>
-        <p className="text-gray-600">
-          A quick snapshot of your wallet activity
+        <h1 className="text-4xl font-bold">Welcome Back!</h1>
+        <p className="text-slate-400">
+          Manage your wallet and track your transactions
         </p>
       </div>
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <BalanceCard balance={balance} />
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
+        <BalanceCard
+          balance={balance}
+          transactions={transactions}
+        />
+
+        <div className="lg:col-span-2">
+          <CreditDebitDonut
+            credit={credit}
+            debit={debit}
+          />
+        </div>
+
+        <CreditDebitStats
+          credit={credit}
+          debit={debit}
+        />
       </div>
 
-      {/* Transactions */}
+      {/* Recent Transactions */}
       <RecentTransactions transactions={transactions} />
     </div>
   )
